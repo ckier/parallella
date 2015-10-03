@@ -26,3 +26,12 @@
 *.exe
 *.out
 *.app
+
+# Generated documentation files
+doc/
+
+# Generated binary files
+bin/
+
+# Clion configuration
+.idea/
