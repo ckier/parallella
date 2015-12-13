@@ -3,7 +3,7 @@
 /// \brief This is a simple OpenCL example for Parallella that performs a
 /// matrix-vector multiplication on the Epiphany processor.
 ///
-/// \detail THIS FILE ONLY is placed in the public domain by Brown Deer Technology, LLC.
+/// \details THIS FILE ONLY is placed in the public domain by Brown Deer Technology, LLC.
 /// in January 2013. No copyright is claimed, and you may use it for any purpose
 /// you like. There is ABSOLUTELY NO WARRANTY for any purpose, expressed or
 /// implied, and any warranty of any kind is explicitly disclaimed.  This
