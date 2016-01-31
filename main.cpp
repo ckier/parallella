@@ -3,7 +3,6 @@
 /// \copyright copyright &copy;2015 Device Controls for Scientific Research, LLC
 ///
 
-#include <string>
 #include "AcceleratorDevice.h"
 #include "Utilities.h"
 
