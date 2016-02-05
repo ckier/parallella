@@ -6,8 +6,8 @@ set(DEBUG ON)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
 # Arch must be set to amd64 or arm.
-#set(CONFIG_ARCH arm)
-set(CONFIG_ARCH amd64)
+set(CONFIG_ARCH arm)
+#set(CONFIG_ARCH amd64)
 
 if (NOT ${CONFIG_ARCH} MATCHES "amd64|arm")
     message(FATAL_ERROR "Architecture not supported: ${CONFIG_ARCH}")
@@ -34,21 +34,8 @@ set(SOURCE_FILES main.cpp)
 add_executable(para_run ${SOURCE_FILES})
 include_directories(ExploreOpenCL)
 add_subdirectory(ExploreOpenCL)
+add_subdirectory(ExploreOpenCLTest)
 target_link_libraries(para_run ExploreOpenCL)
-
-#if (CONFIG_ARCH STREQUAL amd64)
-##    include_directories(/opt/googletest/include)
-##    link_directories(/opt/googletest/lib)
-#
-#    set(OPENCL_LIBS OpenCL)
-#    set(LOGGER_LIBS log4cpp)
-#    set(TEST_LIBS gtest pthread)
-#
-#    add_definitions(-DDEVICE_TYPE=CL_DEVICE_TYPE_ALL)
-#    add_definitions(-DREQUESTED_NUMBER_DEVICES=5)
-#
-##    add_subdirectory(ExploreOpenCLTest)
-#endif ()
 
 if (DEBUG)
     message(STATUS "xxxxxxxxxxxx: CMAKE_SOURCE_DIR ${CMAKE_SOURCE_DIR}")

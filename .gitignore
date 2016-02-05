@@ -35,3 +35,6 @@ bin/
 
 # Clion configuration
 .idea/
+
+# Library directories containing third party distributions.
+ExploreOpenCLTest/lib/
