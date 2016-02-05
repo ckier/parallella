@@ -4,6 +4,7 @@
 /// \brief Application utility functions.
 ///
 
+#include <string>
 #include "log4cpp/FileAppender.hh"
 #include "log4cpp/OstreamAppender.hh"
 #include "Utilities.h"

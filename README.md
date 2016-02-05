@@ -9,4 +9,5 @@ Directory Description (parallella)
 
 * bin: Output directory containing build artifacts.
 * doc: Doxygen generated project documentation.
-* src: Source files for the project.
+* ExploreOpenCL: Source files for the project.
+* ExploreOpenCLTest: Test files for the project.
