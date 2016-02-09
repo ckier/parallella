@@ -10,8 +10,6 @@
 #include "Utilities.h"
 
 namespace Parallella {
-namespace ExploreOpenCL {
-namespace Utilities {
 
 static const char* const loggerName = "ExploreOpenCL";
 static const char* const logFileName = "program.log";
@@ -38,6 +36,4 @@ log4cpp::Category* GetLogger() {
   return loggerPtr;
 }
 
-}  // namespace Utilities
-}  // namespace ExploreOpenCL
 }  // namespace Parallella

@@ -8,11 +8,7 @@
 #include "log4cpp/Category.hh"
 
 namespace Parallella {
-namespace ExploreOpenCL {
-namespace Utilities {
 
 log4cpp::Category* GetLogger();
 
-}  // namespace Utilities
-}  // namespace ExploreOpenCL
 }  // namespace Parallella

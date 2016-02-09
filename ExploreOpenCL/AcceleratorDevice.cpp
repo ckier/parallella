@@ -9,7 +9,6 @@
 #include "log4cpp/OstreamAppender.hh"
 
 namespace Parallella {
-namespace ExploreOpenCL {
 
 const int kBufferSize = 256;
 
@@ -125,5 +124,4 @@ void AcceleratorDevice::PrintDeviceInfo(
   }
 }
 
-}  // namespace ExploreOpenCL
 }  // namespace Parallella

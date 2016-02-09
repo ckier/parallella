@@ -10,7 +10,6 @@
 #include <log4cpp/Category.hh>
 
 namespace Parallella {
-namespace ExploreOpenCL {
 
 /// \brief Class to initialize and control the accelerator device.
 class AcceleratorDevice {
@@ -27,5 +26,4 @@ class AcceleratorDevice {
   void PrintPlatformInfo(cl_platform_id id, cl_platform_info info, std::string message);
   void PrintDeviceInfo(cl_device_id id, cl_device_info info, std::string message);
 };
-}  // namespace ExploreOpenCL
 }  // namespace Parallella

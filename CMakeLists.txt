@@ -35,6 +35,7 @@ add_executable(para_run ${SOURCE_FILES})
 include_directories(ExploreOpenCL)
 add_subdirectory(ExploreOpenCL)
 add_subdirectory(ExploreOpenCLTest)
+add_subdirectory(VectorMultiply)
 target_link_libraries(para_run ExploreOpenCL)
 
 if (DEBUG)

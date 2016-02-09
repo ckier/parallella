@@ -7,7 +7,7 @@
 #include "Utilities.h"
 
 TEST(LoggerTestCase, Test_GetLogger) {
-  log4cpp::Category* logger = Parallella::ExploreOpenCL::Utilities::GetLogger();
+  log4cpp::Category* logger = Parallella::GetLogger();
   EXPECT_TRUE(logger != nullptr);
   delete logger;
 }

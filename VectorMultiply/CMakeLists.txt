@@ -1,10 +1,9 @@
 cmake_minimum_required(VERSION 3.0)
-project(ExploreOpenCL)
+project(VectorMultiply)
 
 add_definitions(-v -std=c++11)
 
-set(HEADER_FILES AcceleratorDevice.h Utilities.h)
-set(SOURCE_FILES AcceleratorDevice.cpp Utilities.cpp)
+set(SOURCE_FILES hello-opencl.cpp)
 
 if (CONFIG_ARCH STREQUAL amd64)
     add_definitions(-DDEVICE_TYPE=CL_DEVICE_TYPE_CPU)
@@ -18,5 +17,5 @@ if (CONFIG_ARCH STREQUAL arm)
     set(OPENCL_LIB libcoprthr_opencl.so)
 endif ()
 
-add_library(ExploreOpenCL STATIC ${SOURCE_FILES} ${HEADER_FILES})
-target_link_libraries(ExploreOpenCL ${OPENCL_LIB} log4cpp)
+add_executable(para_run_vector ${SOURCE_FILES})
+target_link_libraries(para_run_vector ${OPENCL_LIB})
