@@ -18,10 +18,12 @@ AcceleratorDevice::AcceleratorDevice(log4cpp::Category* logger) {
   logger_ = logger;
   InitializePlatform();
   InitializeDevices();
+  InitializeContexts();
 }
 
 /// \brief Destructor for the AcceleratorDevice class.
 AcceleratorDevice::~AcceleratorDevice() {
+  clReleaseContext(context_);
 }
 
 void AcceleratorDevice::InitializePlatform() {
@@ -34,18 +36,13 @@ void AcceleratorDevice::InitializePlatform() {
   clGetPlatformIDs(number_of_platforms, platforms, 0);
   *logger_ << log4cpp::Priority::DEBUG << "Number of platforms: " << number_of_platforms;
 
-  auto index = 0;
-  for (auto i = 0; i < number_of_platforms; i++) {
-    PrintPlatformInfo(platforms[i], CL_PLATFORM_NAME, "name");
-    PrintPlatformInfo(platforms[i], CL_PLATFORM_VENDOR, "vendor");
-    PrintPlatformInfo(platforms[i], CL_PLATFORM_VERSION, "version");
-    PrintPlatformInfo(platforms[i], CL_PLATFORM_PROFILE, "profile");
-    PrintPlatformInfo(platforms[i], CL_PLATFORM_EXTENSIONS, "extensions");
-    index = i;
-  }
-
-  if (index < number_of_platforms) {
-    platform_ = platforms[index];
+  if (number_of_platforms > 0) {
+    platform_ = platforms[0];
+    PrintPlatformInfo(CL_PLATFORM_NAME, "name");
+    PrintPlatformInfo(CL_PLATFORM_VENDOR, "vendor");
+    PrintPlatformInfo(CL_PLATFORM_VERSION, "version");
+    PrintPlatformInfo(CL_PLATFORM_PROFILE, "profile");
+    PrintPlatformInfo(CL_PLATFORM_EXTENSIONS, "extensions");
   } else {
     *logger_ << log4cpp::Priority::ERROR << "No OpenCL platforms available.";
     exit(1);
@@ -65,34 +62,46 @@ void AcceleratorDevice::InitializeDevices() {
 
   if (number_of_devices > 0) {
     device_ = devices[0];
-    PrintDeviceInfo(device_, CL_DEVICE_NAME, "name");
-    PrintDeviceInfo(device_, CL_DEVICE_VENDOR, "vendor");
-    PrintDeviceInfo(device_, CL_DEVICE_EXTENSIONS, "extensions");
-    PrintDeviceInfo(device_, CL_DEVICE_GLOBAL_MEM_CACHE_SIZE, "global memory size");
-    PrintDeviceInfo(device_, CL_DEVICE_ADDRESS_BITS, "address bits");
-    PrintDeviceInfo(device_, CL_DEVICE_AVAILABLE, "available");
-    PrintDeviceInfo(device_, CL_DEVICE_COMPILER_AVAILABLE, "compiler available");
+    PrintDeviceInfo(CL_DEVICE_NAME, "name");
+    PrintDeviceInfo(CL_DEVICE_VENDOR, "vendor");
+    PrintDeviceInfo(CL_DEVICE_EXTENSIONS, "extensions");
+    PrintDeviceInfo(CL_DEVICE_GLOBAL_MEM_CACHE_SIZE, "global memory size");
+    PrintDeviceInfo(CL_DEVICE_ADDRESS_BITS, "address bits");
+    PrintDeviceInfo(CL_DEVICE_AVAILABLE, "available");
+    PrintDeviceInfo(CL_DEVICE_COMPILER_AVAILABLE, "compiler available");
   } else {
     *logger_ << log4cpp::Priority::ERROR << "No OpenCL devices available.";
     exit(1);
   }
   free(devices);
-  *logger_ << log4cpp::Priority::INFO << "Initializing Parallella device completed.";
+
+  *logger_ << log4cpp::Priority::INFO << "Initializing Parallella devices completed.";
 }
 
-void AcceleratorDevice::PrintPlatformInfo(
-    cl_platform_id id,
-    cl_platform_info info,
-    std::string message) {
+void AcceleratorDevice::InitializeContexts() {
+  cl_uint number_of_devices = 1;
+  cl_int error;
+  cl_context_properties context_properties[3] = {
+      CL_CONTEXT_PLATFORM,
+      reinterpret_cast<cl_context_properties>(platform_),
+      0
+  };
+
+  context_ =
+      clCreateContext(context_properties, number_of_devices, &device_, nullptr, nullptr, &error);
+  PrintContextInfo(CL_CONTEXT_NUM_DEVICES, "number of devices");
+  PrintContextInfo(CL_CONTEXT_REFERENCE_COUNT, "reference count");
+
+  *logger_ << log4cpp::Priority::INFO << "Initializing Parallella contexts completed.";
+}
+
+void AcceleratorDevice::PrintPlatformInfo(cl_platform_info info, const std::string& message) const {
   char buffer[kBufferSize];
-  clGetPlatformInfo(id, info, sizeof(buffer), &buffer, nullptr);
+  clGetPlatformInfo(platform_, info, sizeof(buffer), &buffer, nullptr);
   *logger_ << log4cpp::Priority::DEBUG << "Platform " << message << ": " << buffer;
 }
 
-void AcceleratorDevice::PrintDeviceInfo(
-    cl_device_id id,
-    cl_device_info info,
-    std::string message) {
+void AcceleratorDevice::PrintDeviceInfo(cl_device_info info, const std::string& message) const {
   char buffer[kBufferSize];
   cl_ulong ulong_return_value;
   cl_uint uint_return_value;
@@ -102,20 +111,20 @@ void AcceleratorDevice::PrintDeviceInfo(
     case CL_DEVICE_NAME:
     case CL_DEVICE_VENDOR:
     case CL_DEVICE_EXTENSIONS:
-      clGetDeviceInfo(id, info, sizeof(buffer), &buffer, nullptr);
+      clGetDeviceInfo(device_, info, sizeof(buffer), &buffer, nullptr);
       *logger_ << log4cpp::Priority::DEBUG << "Device " << message << ": " << buffer;
       break;
     case CL_DEVICE_GLOBAL_MEM_CACHE_SIZE:
-      clGetDeviceInfo(id, info, sizeof(cl_ulong), &ulong_return_value, nullptr);
+      clGetDeviceInfo(device_, info, sizeof(cl_ulong), &ulong_return_value, nullptr);
       *logger_ << log4cpp::Priority::DEBUG << "Device " << message << ": " << ulong_return_value;
       break;
     case CL_DEVICE_ADDRESS_BITS:
-      clGetDeviceInfo(id, info, sizeof(cl_uint), &uint_return_value, nullptr);
+      clGetDeviceInfo(device_, info, sizeof(cl_uint), &uint_return_value, nullptr);
       *logger_ << log4cpp::Priority::DEBUG << "Device " << message << ": " << uint_return_value;
       break;
     case CL_DEVICE_AVAILABLE:
     case CL_DEVICE_COMPILER_AVAILABLE:
-      clGetDeviceInfo(id, info, sizeof(cl_bool), &bool_return_value, nullptr);
+      clGetDeviceInfo(device_, info, sizeof(cl_bool), &bool_return_value, nullptr);
       *logger_ << log4cpp::Priority::DEBUG << "Device " << message << ": " << bool_return_value;
       break;
     default:
@@ -124,4 +133,9 @@ void AcceleratorDevice::PrintDeviceInfo(
   }
 }
 
+void AcceleratorDevice::PrintContextInfo(cl_context_info info, const std::string& message) const {
+  cl_uint uint_return_value;
+  clGetContextInfo(context_, info, sizeof(uint_return_value), &uint_return_value, nullptr);
+  *logger_ << log4cpp::Priority::DEBUG << "Context " << message << ": " << uint_return_value;
+}
 }  // namespace Parallella
