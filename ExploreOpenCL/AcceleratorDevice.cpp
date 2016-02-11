@@ -89,8 +89,13 @@ void AcceleratorDevice::InitializeContexts() {
 
   context_ =
       clCreateContext(context_properties, number_of_devices, &device_, nullptr, nullptr, &error);
-  PrintContextInfo(CL_CONTEXT_NUM_DEVICES, "number of devices");
-  PrintContextInfo(CL_CONTEXT_REFERENCE_COUNT, "reference count");
+  if (error == 0) {
+    PrintContextInfo(CL_CONTEXT_NUM_DEVICES, "number of devices");
+    PrintContextInfo(CL_CONTEXT_REFERENCE_COUNT, "reference count");
+  } else {
+    *logger_ << log4cpp::Priority::ERROR << "No OpenCL devices available.";
+    exit(error);
+  }
 
   *logger_ << log4cpp::Priority::INFO << "Initializing Parallella contexts completed.";
 }
