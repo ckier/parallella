@@ -1,4 +1,4 @@
-/// \file hello-opencl.cpp
+/// \file VectorMultiply.cpp
 ///
 /// \brief This is a simple OpenCL example for Parallella that performs a
 /// matrix-vector multiplication on the Epiphany processor.
@@ -12,8 +12,9 @@
 /// materials in which it may be included, or with which it is co-distributed.
 ///
 
-//#define DEVICE_TYPE	CL_DEVICE_TYPE_CPU
-#define DEVICE_TYPE	CL_DEVICE_TYPE_ACCELERATOR
+// DEVICE_TYPE is defined in the CMakeList.txt file
+// depending on the build architecture (arm vs. amd64).
+// #define DEVICE_TYPE	CL_DEVICE_TYPE_ACCELERATOR
 
 
 #include <stdlib.h>
