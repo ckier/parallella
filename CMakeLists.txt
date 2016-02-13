@@ -6,8 +6,8 @@ set(DEBUG ON)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
 # Arch must be set to amd64 or arm.
-set(CONFIG_ARCH arm)
-#set(CONFIG_ARCH amd64)
+#set(CONFIG_ARCH arm)
+set(CONFIG_ARCH amd64)
 
 if (NOT ${CONFIG_ARCH} MATCHES "amd64|arm")
     message(FATAL_ERROR "Architecture not supported: ${CONFIG_ARCH}")

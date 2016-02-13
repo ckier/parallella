@@ -4,7 +4,6 @@
 ///
 
 #include "AcceleratorDevice.h"
-
 #include "log4cpp/FileAppender.hh"
 #include "log4cpp/OstreamAppender.hh"
 
@@ -45,7 +44,7 @@ void AcceleratorDevice::InitializePlatform() {
     PrintPlatformInfo(CL_PLATFORM_EXTENSIONS, "extensions");
   } else {
     *logger_ << log4cpp::Priority::ERROR << "No OpenCL platforms available.";
-    exit(1);
+    exit(EXIT_FAILURE);
   }
   free(platforms);
 
@@ -71,7 +70,7 @@ void AcceleratorDevice::InitializeDevices() {
     PrintDeviceInfo(CL_DEVICE_COMPILER_AVAILABLE, "compiler available");
   } else {
     *logger_ << log4cpp::Priority::ERROR << "No OpenCL devices available.";
-    exit(1);
+    exit(EXIT_FAILURE);
   }
   free(devices);
 
