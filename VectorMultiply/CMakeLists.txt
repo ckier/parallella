@@ -3,7 +3,7 @@ project(VectorMultiply)
 
 add_definitions(-v -std=c++11)
 
-set(SOURCE_FILES VecotorMultiply.cpp)
+set(SOURCE_FILES VectorMultiply.cpp)
 
 if (CONFIG_ARCH STREQUAL amd64)
     add_definitions(-DDEVICE_TYPE=CL_DEVICE_TYPE_CPU)
